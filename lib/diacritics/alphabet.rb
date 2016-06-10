@@ -8,6 +8,33 @@ module Diacritics
   class Alphabet
     attr_reader :regexp, :hash
 
+    ALEF = 0627.chr("UTF-8")
+    ALEF_MADDA = 0622.chr("UTF-8")
+    ALEF_HAMZA_ABOVE = 0623.chr("UTF-8")
+    ALEF_HAMZA_BELOW = 0625.chr("UTF-8")
+
+    WAW = "\u0648"
+    WAW_HAMZA = "\u0624"
+
+    YEH = "\u064A"
+    YEH_HAMZA = "\u0626" 
+    DOTLESS_YEH = "\u0649"
+
+    TEH_MARBOUTA = "\u0629"
+    HEH = "\u0647"
+
+    TATWEEL = "\u0640"
+
+    FATHATAN = "\u064B"
+    DAMMATAN = "\u064C"
+    KASRATAN = "\u064D"
+    FATHA = "\u064E" #064E.chr("UTF-8")
+    DAMMA = "\u064F"
+    KASRA = "\u0650"
+    SHADDA = "\u0651"
+    SUKUN = "\u0652"
+
+
     def initialize
       @downcase, @upcase, @permanent = [], [], []
       prepare_alphabet
@@ -37,8 +64,7 @@ module Diacritics
     end
 
     def prepare_regexp
-      downcase = @upcase.join
-      upcase = @downcase.join
+      downcase, upcase = @upcase.join, @downcase.join
       permanent = (@downcase + @upcase).uniq.join
       {
         downcase: /[#{downcase}]/,
@@ -51,25 +77,16 @@ module Diacritics
     #
     #   ["a", "b"], ["A", "B"] #=> {"a" => "A", "b" => "B"}
     def self.hashed(one, two)
-      Hash[one.zip two]
+      hash = {}
+      [one, two].transpose.each { |key, value| hash[key] = value }
+      hash
     end
 
     def data
-      languages.each_with_object({}) do |language, hash|
-        hash[language] = send(language)
-        hash
-      end
-    end
-
-    def languages
-      [:en, :de, :pl, :cs, :fr, :it, :eo, :is, :pt, :sp, :hu, :nn, :ru, :gr]
-    end
-
-    def en
-      { # English
-        downcase:  [' ', '?', '.', ','],
-        upcase:    [' ', '?', '.', ','],
-        permanent: ['-', '', '', '']
+      {
+        de: de, pl: pl, cs: cs, fr: fr, it: it, eo: eo,
+        is: is, pt: pt, sp: sp, hu: hu, nn: nn, ru: ru, gr: gr, 
+	      ar: ar
       }
     end
 
@@ -180,5 +197,13 @@ module Diacritics
           a a g d e e z e th i i k l m n x o o p r s t y ph ps)
       }
     end
+
+    def ar
+      { # Arabic
+        downcase:  %w(إ آ أ ئ ى ة ؤ "\u064B" "\u064C" "\u064D" "\u064E" "\u064F" "\u0650" "\u0651" "\u0652"),
+        upcase:    %w(إ آ أ ئ ى ة ؤ "\u064B" "\u064C" "\u064D" "\u064E" "\u064F" "\u0650" "\u0651" "\u0652"),
+        permanent: %w(ا ا ا ي ي ه و '' '' '' '' '' '' '' '')
+      } 
+    end  
   end
 end
