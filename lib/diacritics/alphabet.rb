@@ -8,6 +8,33 @@ module Diacritics
   class Alphabet
     attr_reader :regexp, :hash
 
+    ALEF = 0627.chr("UTF-8")
+    ALEF_MADDA = 0622.chr("UTF-8")
+    ALEF_HAMZA_ABOVE = 0623.chr("UTF-8")
+    ALEF_HAMZA_BELOW = 0625.chr("UTF-8")
+
+    WAW = "\u0648"
+    WAW_HAMZA = "\u0624"
+
+    YEH = "\u064A"
+    YEH_HAMZA = "\u0626" 
+    DOTLESS_YEH = "\u0649"
+
+    TEH_MARBOUTA = "\u0629"
+    HEH = "\u0647"
+
+    TATWEEL = "\u0640"
+
+    FATHATAN = "\u064B"
+    DAMMATAN = "\u064C"
+    KASRATAN = "\u064D"
+    FATHA = "\u064E" #064E.chr("UTF-8")
+    DAMMA = "\u064F"
+    KASRA = "\u0650"
+    SHADDA = "\u0651"
+    SUKUN = "\u0652"
+
+
     def initialize
       @downcase, @upcase, @permanent = [], [], []
       prepare_alphabet
