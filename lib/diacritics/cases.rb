@@ -30,5 +30,9 @@ module Diacritics
     def permanent(text)
       text.old_downcase.gsub @regexp[:permanent], @hash[:permanent]
     end
+
+    def remove(text)
+      text.old_downcase.gsub @regexp[:remove], @hash[:remove]
+    end
   end
 end

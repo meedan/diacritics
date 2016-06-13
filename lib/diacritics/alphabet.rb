@@ -9,7 +9,7 @@ module Diacritics
     attr_reader :regexp, :hash
 
     def initialize
-      @downcase, @upcase, @permanent = [], [], []
+      @downcase, @upcase, @permanent, @remove = [], [], [], []
       prepare_alphabet
       @hash, @regexp = prepare_hash, prepare_regexp
     end
@@ -21,6 +21,7 @@ module Diacritics
         @downcase += hash[:downcase]
         @upcase += hash[:upcase]
         @permanent += hash[:permanent]
+        @remove += hash[:remove]
       end
     end
 
@@ -29,20 +30,25 @@ module Diacritics
       hash = klass.hashed(@downcase, @upcase)
       one = klass.hashed(@downcase, @permanent)
       two = klass.hashed(@upcase, @permanent)
+      one_r = klass.hashed(@downcase, @remove)
+      two_r = klass.hashed(@upcase, @remove)
       {
         downcase: hash.invert,
         upcase: hash,
-        permanent: one.merge(two)
+        permanent: one.merge(two),
+        remove: one_r.merge(two_r)
       }
     end
 
     def prepare_regexp
       downcase, upcase = @upcase.join, @downcase.join
       permanent = (@downcase + @upcase).uniq.join
+      remove = (@downcase + @upcase).uniq.join
       {
         downcase: /[#{downcase}]/,
         upcase: /[#{upcase}]/,
-        permanent: /[#{permanent}]/
+        permanent: /[#{permanent}]/,
+        remove: /[#{remove}]/
       }
     end
 
@@ -67,7 +73,8 @@ module Diacritics
       { # English
         downcase:  [' ', '?', '.', ','],
         upcase:    [' ', '?', '.', ','],
-        permanent: ['-', '', '', '']
+        permanent: ['-', '', '', ''],
+        remove:    [' ', '?', '.', ',']
       }
     end
 
@@ -75,15 +82,17 @@ module Diacritics
       { # German
         downcase:  %w(ä ö ü ß),
         upcase:    %w(Ä Ö Ü ẞ),
-        permanent: %w(ae oe ue ss)
+        permanent: %w(ae oe ue ss),
+        remove:    %w(ae oe ue ss)
       }
     end
 
     def pl
-      { # Polish
+      { # %w(a c e l n o s z z)Polish
         downcase:  %w(ą ć ę ł ń ó ś ż ź),
         upcase:    %w(Ą Ć Ę Ł Ń Ó Ś Ż Ź),
-        permanent: %w(a c e l n o s z z)
+        permanent: %w(a c e l n o s z z),
+        remove:    %w(a c e l n o s z z)
       }
     end
 
@@ -91,15 +100,17 @@ module Diacritics
       { # Czech
         downcase:  %w(á č í ř š ý ž),
         upcase:    %w(Á Č Í Ř Š Ý Ž),
-        permanent: %w(a c i r s y z)
+        permanent: %w(a c i r s y z),
+        remove:    %w(a c i r s y z)
       }
     end
 
     def fr
-      { # French
+      { # Fren        remove:ch
         downcase:  %w(à â é è ë ê ï î ô ù û ü ÿ ç œ æ),
         upcase:    %w(À Â É È Ë Ê Ï Î Ô Ù Û Ü Ÿ Ç Œ Æ),
-        permanent: %w(a a e e e e i i o u u ue y c oe ae)
+        permanent: %w(a a e e e e i i o u u ue y c oe ae),
+        remove:    %w(a a e e e e i i o u u ue y c oe ae)
       }
     end
 
@@ -107,7 +118,8 @@ module Diacritics
       { # Italian
         downcase:  %w(ì ù ò),
         upcase:    %w(Ì Ù Ò),
-        permanent: %w(i u o)
+        permanent: %w(i u o),
+        remove:    %w(i u o)
       }
     end
 
@@ -115,7 +127,8 @@ module Diacritics
       { # Esperanto
         downcase:  %w(ĉ ĝ ĥ ĵ ŝ ŭ),
         upcase:    %w(Ĉ Ĝ Ĥ Ĵ Ŝ Ŭ),
-        permanent: %w(c g h j s u)
+        permanent: %w(c g h j s u),
+        remove:    %w(c g h j s u)
       }
     end
 
@@ -123,7 +136,8 @@ module Diacritics
       { # Iceland
         downcase:  %w(ð þ),
         upcase:    %w(Ð Þ),
-        permanent: %w(d p)
+        permanent: %w(d p),
+        remove:    %w(d p)
       }
     end
 
@@ -131,7 +145,8 @@ module Diacritics
       { # Portugal
         downcase:  %w(ã ç),
         upcase:    %w(Ã Ç),
-        permanent: %w(a c)
+        permanent: %w(a c),
+        remove:    %w(a c)
       }
     end
 
@@ -139,7 +154,8 @@ module Diacritics
       { # Spanish
         downcase:  ['¿'],
         upcase:    ['¿'],
-        permanent: ['']
+        permanent: [''],
+        remove:    ['¿']
       }
     end
 
@@ -147,7 +163,8 @@ module Diacritics
       { # Hungarian
         downcase:  %w(ő),
         upcase:    %w(Ő),
-        permanent: %w(oe)
+        permanent: %w(oe),
+        remove:    %w(oe)
       }
     end
 
@@ -155,7 +172,8 @@ module Diacritics
       { # Norwegian
         downcase:  %w(æ å),
         upcase:    %w(Æ Å),
-        permanent: %w(ae a)
+        permanent: %w(ae a),
+        remove:    %w(ae a)
       }
     end
 
@@ -166,15 +184,20 @@ module Diacritics
         upcase: %w(
           А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Ы Ь Ю Я),
         permanent: %w(
+          а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш ы ь ю я),
+        remove: %w(
           а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш ы ь ю я)
+
       }
     end
 
     def gr
       { # Greek
-        downcase: %w(α ά γ δ ε έ ζ η θ ι ί κ λ μ ν ξ ο ό π ρ σ τ υ φ ψ),
-        upcase:   %w(Α Ά Γ Δ Ε Έ Ζ Η Θ Ι Ί Κ Λ Μ Ν Ξ Ο Ό Π Ρ Σ Τ Υ Φ Ψ),
+        downcase:  %w(α ά γ δ ε έ ζ η θ ι ί κ λ μ ν ξ ο ό π ρ σ τ υ φ ψ),
+        upcase:    %w(Α Ά Γ Δ Ε Έ Ζ Η Θ Ι Ί Κ Λ Μ Ν Ξ Ο Ό Π Ρ Σ Τ Υ Φ Ψ),
         permanent: %w(
+          a a g d e e z e th i i k l m n x o o p r s t y ph ps),
+        remove:    %w(
           a a g d e e z e th i i k l m n x o o p r s t y ph ps)
       }
     end
@@ -183,7 +206,8 @@ module Diacritics
       { # Arabic
         downcase:  %w(إ آ أ ئ ى ة ؤ "\u064B" "\u064C" "\u064D" "\u064E" "\u064F" "\u0650" "\u0651" "\u0652"),
         upcase:    %w(إ آ أ ئ ى ة ؤ "\u064B" "\u064C" "\u064D" "\u064E" "\u064F" "\u0650" "\u0651" "\u0652"),
-        permanent: %w(ا ا ا ي ي ه و '' '' '' '' '' '' '' '')
+        permanent: %w(ا ا ا ي ي ه و '' '' '' '' '' '' '' ''),
+        remove:    %w(ا ا ا ي ي ه و '' '' '' '' '' '' '' '')
       } 
     end
   end

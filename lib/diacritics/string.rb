@@ -22,6 +22,14 @@ module Diacritics
       Diacritics::Cases.instance.permanent(self) == self
     end
 
+    def remove
+      Diacritics::Cases.instance.remove self
+    end
+
+    def remove?
+      Diacritics::Cases.instance.remove(self) == self
+    end
+
     def slug?
       return true if match(/^[[a-z\d_-]]+$/)
     end

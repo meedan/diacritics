@@ -567,4 +567,33 @@ describe Diacritics::String do
       end
     end
   end
+
+  shared_examples_for 'remove' do
+    describe '#remove' do
+      it { expect(subject.remove).to eq result[0] }
+    end
+  end
+
+  context 'English' do
+    it_behaves_like 'remove' do
+      subject { "Will will Will will Will's will to Will?" }
+      let(:result) do
+        [
+          "will will will will will's will to will?"
+        ]
+      end
+    end
+  end
+
+  context 'Arabic' do
+    it_behaves_like 'remove' do
+      subject { 'إ آ أ ئ ى ة ؤ' }
+      let(:result) do
+        [
+          'ا ا ا ي ي ه و'
+        ]
+      end
+    end
+  end
+
 end
