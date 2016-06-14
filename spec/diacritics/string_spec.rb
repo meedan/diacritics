@@ -541,4 +541,30 @@ describe Diacritics::String do
     it { expect('Lorem-ipsum').not_to be_slug }
     it { expect('łorem-ipsum').not_to be_slug }
   end
+
+  context 'Arabic' do
+    it_behaves_like 'word processing' do
+      subject {"اليوم_العالمي_لحرية_الصحافة"} #{"م ك ت ب ٌ"}
+      let(:result) do
+        [
+         "اليوم_العالمي_لحرية_الصحافة",
+         "اليوم_العالمي_لحرية_الصحافة",
+         "اليوم_العالمي_لحريه_الصحافه"
+        ]
+      end
+    end
+  end
+
+  context 'Arabic' do
+    it_behaves_like 'word processing' do
+      subject { 'إ آ أ ئ ى ة ؤ' }
+      let(:result) do
+        [
+          'إ آ أ ئ ى ة ؤ',
+          'إ آ أ ئ ى ة ؤ',
+          'ا-ا-ا-ي-ي-ه-و'
+        ]
+      end
+    end
+  end
 end

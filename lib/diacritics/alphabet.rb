@@ -58,7 +58,8 @@ module Diacritics
     def data
       {
         en: en, de: de, pl: pl, cs: cs, fr: fr, it: it, eo: eo,
-        is: is, pt: pt, sp: sp, hu: hu, nn: nn, ru: ru, gr: gr
+        is: is, pt: pt, sp: sp, hu: hu, nn: nn, ru: ru, gr: gr,
+        ar: ar
       }
     end
 
@@ -177,5 +178,14 @@ module Diacritics
           a a g d e e z e th i i k l m n x o o p r s t y ph ps)
       }
     end
+
+    def ar
+      { # Arabic
+        downcase:  %w(إ آ أ ئ ى ة ؤ "\u064B" "\u064C" "\u064D" "\u064E" "\u064F" "\u0650" "\u0651" "\u0652"),
+        upcase:    %w(إ آ أ ئ ى ة ؤ "\u064B" "\u064C" "\u064D" "\u064E" "\u064F" "\u0650" "\u0651" "\u0652"),
+        permanent: %w(ا ا ا ي ي ه و '' '' '' '' '' '' '' '')
+      } 
+    end
+
   end
 end
