@@ -129,9 +129,9 @@ module Diacritics
 
     def pt
       { # Portugal
-        downcase:  %w(ã ç),
-        upcase:    %w(Ã Ç),
-        permanent: %w(a c)
+        downcase:  %w(ã ç õ ú),
+        upcase:    %w(Ã Ç Õ Ú),
+        permanent: %w(a c o u)
       }
     end
 

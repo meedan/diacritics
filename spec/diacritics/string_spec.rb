@@ -567,4 +567,18 @@ describe Diacritics::String do
       end
     end
   end
+  
+  context 'Portuguese' do
+    it_behaves_like 'word processing' do
+      subject { 'ç, á, é, í, ó, ú, â, ê, ô, ã, õ, à' }
+      let(:result) do
+        [
+          'ç, á, é, í, ó, ú, â, ê, ô, ã, õ, à',
+          'Ç, Á, É, Í, Ó, Ú, Â, Ê, Ô, Ã, Õ, À',
+          'c-a-e-i-o-u-a-e-o-a-o-a'
+        ]
+      end
+    end
+  end
+
 end
