@@ -597,4 +597,18 @@ describe Diacritics::String do
       end
     end
   end
+
+  context 'Spanish' do
+    it_behaves_like 'word processing' do
+      subject { 'Piñata¿' }
+      let(:result) do
+        [
+          'piñata¿',
+          'PIÑATA¿',
+          'pinata'
+        ]
+      end
+    end
+  end
+
 end

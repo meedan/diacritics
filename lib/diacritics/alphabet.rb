@@ -144,9 +144,9 @@ module Diacritics
 
     def sp
       { # Spanish
-        downcase:  ['¿'],
-        upcase:    ['¿'],
-        permanent: ['']
+        downcase:  ['¿', 'ñ'],
+        upcase:    ['¿', 'Ñ'],
+        permanent: ['', 'n']
       }
     end
 
