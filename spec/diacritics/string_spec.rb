@@ -24,6 +24,12 @@ describe Diacritics::String do
     end
   end
 
+  shared_examples_for 'permanent' do
+    describe '#permanent' do
+      it { expect(subject.permanent(' ')).to eq result[0] }
+    end
+  end
+
   context 'English' do
     it_behaves_like 'word processing' do
       subject { "Will will Will will Will's will to Will?" }
@@ -581,4 +587,14 @@ describe Diacritics::String do
     end
   end
 
+  context 'Permanent_space' do
+    it_behaves_like 'permanent' do
+      subject { "Will will Will will Will's will to Will?" }
+      let(:result) do
+        [
+          "will will will will will's will to will"
+        ]
+      end
+    end
+  end
 end

@@ -14,12 +14,12 @@ module Diacritics
       end
     end
 
-    def permanent
-      Diacritics::Cases.instance.permanent self
+    def permanent(spaceReplaceChar = '-')
+      Diacritics::Cases.instance.permanent(self,spaceReplaceChar)
     end
 
     def permanent?
-      Diacritics::Cases.instance.permanent(self) == self
+      Diacritics::Cases.instance.permanent(self,'-') == self
     end
 
     def slug?

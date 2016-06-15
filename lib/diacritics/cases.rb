@@ -17,6 +17,7 @@ module Diacritics
     def initialize
       @alphabet = Diacritics::Alphabet.new
       @hash, @regexp = @alphabet.hash, @alphabet.regexp
+      @spaceReplaceChar = '-'
     end
 
     def downcase(text)
@@ -27,7 +28,12 @@ module Diacritics
       text.old_upcase.gsub @regexp[:upcase], @hash[:upcase]
     end
 
-    def permanent(text)
+    def permanent(text,spaceReplaceChar)
+      if spaceReplaceChar != @spaceReplaceChar
+        @alphabet.reload_permanent(spaceReplaceChar)
+        @hash, @regexp = @alphabet.hash, @alphabet.regexp
+        @spaceReplaceChar = spaceReplaceChar
+      end
       text.old_downcase.gsub @regexp[:permanent], @hash[:permanent]
     end
   end
