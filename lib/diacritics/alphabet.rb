@@ -6,16 +6,16 @@ module Diacritics
 
   # Characters from many alphabets
   class Alphabet
-    attr_reader :regexp, :hash, :spaceReplaceChar
+    attr_reader :regexp, :hash, :space_replace_char
 
     def initialize
-      @spaceReplaceChar = '-'
+      @space_replace_char = '-'
       prepare_alphabet
       @hash, @regexp = prepare_hash, prepare_regexp
     end
 
-    def reload_permanent(spaceReplaceChar)
-      @spaceReplaceChar = spaceReplaceChar
+    def reload_permanent(space_replace_char)
+      @space_replace_char = space_replace_char
       prepare_alphabet
       @hash, @regexp = prepare_hash, prepare_regexp
     end
@@ -74,7 +74,7 @@ module Diacritics
       { # English
         downcase:  [' ', '?', '.', ','],
         upcase:    [' ', '?', '.', ','],
-        permanent: [@spaceReplaceChar, '', '', '']
+        permanent: [@space_replace_char, '', '', '']
       }
     end
 

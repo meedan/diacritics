@@ -14,8 +14,8 @@ module Diacritics
       end
     end
 
-    def permanent(spaceReplaceChar = '-')
-      Diacritics::Cases.instance.permanent(self,spaceReplaceChar)
+    def permanent(space_replace_char = '-')
+      Diacritics::Cases.instance.permanent(self,space_replace_char)
     end
 
     def permanent?
